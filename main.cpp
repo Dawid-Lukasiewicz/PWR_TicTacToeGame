@@ -5,7 +5,7 @@ using namespace std;
 
 int main()
 {
-    Game *tmp = new Game(5);
+    Game *tmp = new Game(3);
     char CurrentPlayer;
 
     tmp->DisplayBoard();
@@ -16,7 +16,8 @@ int main()
         tmp->DisplayBoard();
         CurrentPlayer = tmp->GetTurn();
         tmp->SetTurn(tmp->NextTurn(tmp->GetTurn()));
-        tmp->AchieveWin(CurrentPlayer);
+        if(tmp->AchieveWin(CurrentPlayer))
+            return 0;
     }while(1);
     
     return 0;

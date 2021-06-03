@@ -61,5 +61,43 @@ char Game::NextTurn(char CurrentPlayer)
 
 bool Game::AchieveWin(char CurrentPlayer)
 {
-    
+    //Horizonally
+    for (int i = 0; i < Size; i++)
+    {
+        for (int j = 0; j < Size-2; j++)
+        {
+            if(BoardGame[i][j]==BoardGame[i][j+1] && BoardGame[i][j]==BoardGame[i][j+2] && BoardGame[i][j]==CurrentPlayer)
+            {
+                cout<<"The "<<CurrentPlayer<<" Won"<<endl;
+                return true;
+            }
+        }
+    }
+
+    //Vertically
+    for (int i = 0; i < Size-2; i++)
+    {
+        for (int j = 0; j < Size; j++)
+        {
+            if(BoardGame[i][j]==BoardGame[i+1][j] && BoardGame[i][j]==BoardGame[i+2][j] && BoardGame[i][j]==CurrentPlayer)
+            {
+                cout<<"The "<<CurrentPlayer<<" Won"<<endl;
+                return true;
+            }
+        }
+    }
+
+    //Diagonally
+    for (int i = 0; i < Size-2; i++)
+    {
+        for (int j = 0; j < Size-2; j++)
+        {
+            if(BoardGame[i][j]==BoardGame[i+1][j+1] && BoardGame[i][j]==BoardGame[i+2][j+2] && BoardGame[i][j]==CurrentPlayer)
+            {
+                cout<<"The "<<CurrentPlayer<<" Won"<<endl;
+                return true;
+            }
+        }
+    }
+    return false;
 }
