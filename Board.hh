@@ -1,6 +1,6 @@
 #ifndef BOARD
 #define BOARD
-
+#include<memory>
 #include<iostream>
 
 class Board
@@ -14,7 +14,12 @@ public:
     ~Board();
     Board(int NewSize);
 
+    const int& GetSize();
+    char** GetBoard();
+
     void DisplayBoard();
+    bool CorrectMove(char& CurrentPlayer, int X_Value, int Y_Value);
+    bool AchieveWin(char CurrentPlayer);
 };
 
 #endif

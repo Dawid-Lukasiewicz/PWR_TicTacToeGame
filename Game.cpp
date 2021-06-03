@@ -2,12 +2,12 @@
 
 using namespace std;
 
-Game::Game():
-    Board::Board()
+Game::Game(std::shared_ptr<Board>board):
+    BoardGame(board)
 {}
 
-Game::Game(int NewSize):
-    Board::Board(NewSize)
+Game::Game(std::shared_ptr<Board>board, std::shared_ptr<MiniMaxAi> ai):
+    BoardGame(board), Ai(ai)
 {}
 
 Game::~Game()
@@ -25,7 +25,7 @@ void Game::SetTurn(char NextTurn)
 
 void Game::DisplayBoard()
 {
-    Board::DisplayBoard();
+    BoardGame->DisplayBoard();
 }
 
 char Game::NextPlayer(char CurrentPlayer)
@@ -38,92 +38,24 @@ char Game::NextPlayer(char CurrentPlayer)
 
 char Game::NextTurn(char CurrentPlayer)
 {
-    int tmpX, tmpY;
-    bool flag = true;
-    do
+    if(Ai->GetPlayer()==CurrentPlayer)
     {
-        cout<<"Ruch gracza: "<<CurrentPlayer<<endl;
-        cin>>tmpX>>tmpY;
-        if(BoardGame[tmpX][tmpY] == ' ')
+        cout<<"Player: "<<CurrentPlayer<<endl;
+        Ai->MakeMove_random(BoardGame);
+    }
+    else
+    {
+        int X_Value, Y_Value;
+        do
         {
-            BoardGame[tmpX][tmpY] = CurrentPlayer;
-            flag = false;
-        }
-        else
-        {
-            DisplayBoard();
-            cout<<"Spot occupied"<<endl;
-        }
-    } while (flag);
-
+            cout<<"Player: "<<CurrentPlayer<<endl;
+            cin>>X_Value>>Y_Value;
+        } while (!BoardGame->CorrectMove(CurrentPlayer, X_Value, Y_Value));
+    }
     return NextPlayer(CurrentPlayer);
 }
 
-bool Game::AchieveWin(char CurrentPlayer)
+char Game::MakeMove(char CurrentPlayer)
 {
-    // Tie
-    for (int i = 0; i < Size; i++)
-    {
-        for (int j = 0; j < Size; j++)
-        {
-            if(BoardGame[i][j]==' ')
-                goto NotFilled;
-        }
-    }
-    cout<<"Tie!"<<endl;
-    return true;
-    NotFilled:
-    
-    //Horizonally
-    for (int i = 0; i < Size; i++)
-    {
-        for (int j = 0; j < Size-2; j++)
-        {
-            if(BoardGame[i][j]==BoardGame[i][j+1] && BoardGame[i][j]==BoardGame[i][j+2] && BoardGame[i][j]==CurrentPlayer)
-            {
-                cout<<"The "<<CurrentPlayer<<" Won"<<endl;
-                return true;
-            }
-        }
-    }
-
-    //Vertically
-    for (int i = 0; i < Size-2; i++)
-    {
-        for (int j = 0; j < Size; j++)
-        {
-            if(BoardGame[i][j]==BoardGame[i+1][j] && BoardGame[i][j]==BoardGame[i+2][j] && BoardGame[i][j]==CurrentPlayer)
-            {
-                cout<<"The "<<CurrentPlayer<<" Won"<<endl;
-                return true;
-            }
-        }
-    }
-
-    //Diagonally Right
-    for (int i = 0; i < Size-2; i++)
-    {
-        for (int j = 0; j < Size-2; j++)
-        {
-            if(BoardGame[i][j]==BoardGame[i+1][j+1] && BoardGame[i][j]==BoardGame[i+2][j+2] && BoardGame[i][j]==CurrentPlayer)
-            {
-                cout<<"The "<<CurrentPlayer<<" Won"<<endl;
-                return true;
-            }
-        }
-    }
-    //Diagonally Inverse
-    for (int i = 0; i < Size-2; i++)
-    {
-        for (int j = Size-1; j > 1; j--)
-        {
-            // cout<<"Checing player "<<CurrentPlayer<<endl<<BoardGame[i][j]<<" "<<BoardGame[i+1][j-1]<<" "<<BoardGame[i+2][j-2]<<endl;
-            if(BoardGame[i][j]==BoardGame[i+1][j-1] && BoardGame[i][j]==BoardGame[i+2][j-2] && BoardGame[i][j]==CurrentPlayer)
-            {
-                cout<<"The "<<CurrentPlayer<<" Won"<<endl;
-                return true;
-            }
-        }
-    }
-    return false;
+    return NextPlayer(CurrentPlayer);
 }
