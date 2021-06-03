@@ -30,10 +30,10 @@ void Game::DisplayBoard()
 
 char Game::NextPlayer(char CurrentPlayer)
 {
-    if(CurrentPlayer == 'X')
-        return 'O';
+    if(CurrentPlayer == Players[1])
+        return Players[0];
     else
-        return 'X';
+        return Players[1];
 }
 
 char Game::NextTurn(char CurrentPlayer)
@@ -61,6 +61,19 @@ char Game::NextTurn(char CurrentPlayer)
 
 bool Game::AchieveWin(char CurrentPlayer)
 {
+    // Tie
+    for (int i = 0; i < Size; i++)
+    {
+        for (int j = 0; j < Size; j++)
+        {
+            if(BoardGame[i][j]==' ')
+                goto NotFilled;
+        }
+    }
+    cout<<"Tie!"<<endl;
+    return true;
+    NotFilled:
+    
     //Horizonally
     for (int i = 0; i < Size; i++)
     {
@@ -87,12 +100,25 @@ bool Game::AchieveWin(char CurrentPlayer)
         }
     }
 
-    //Diagonally
+    //Diagonally Right
     for (int i = 0; i < Size-2; i++)
     {
         for (int j = 0; j < Size-2; j++)
         {
             if(BoardGame[i][j]==BoardGame[i+1][j+1] && BoardGame[i][j]==BoardGame[i+2][j+2] && BoardGame[i][j]==CurrentPlayer)
+            {
+                cout<<"The "<<CurrentPlayer<<" Won"<<endl;
+                return true;
+            }
+        }
+    }
+    //Diagonally Inverse
+    for (int i = 0; i < Size-2; i++)
+    {
+        for (int j = Size-1; j > 1; j--)
+        {
+            // cout<<"Checing player "<<CurrentPlayer<<endl<<BoardGame[i][j]<<" "<<BoardGame[i+1][j-1]<<" "<<BoardGame[i+2][j-2]<<endl;
+            if(BoardGame[i][j]==BoardGame[i+1][j-1] && BoardGame[i][j]==BoardGame[i+2][j-2] && BoardGame[i][j]==CurrentPlayer)
             {
                 cout<<"The "<<CurrentPlayer<<" Won"<<endl;
                 return true;

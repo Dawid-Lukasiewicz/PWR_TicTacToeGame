@@ -16,10 +16,8 @@ int main()
         tmp->DisplayBoard();
         CurrentPlayer = tmp->GetTurn();
         tmp->SetTurn(tmp->NextTurn(tmp->GetTurn()));
-        if(tmp->AchieveWin(CurrentPlayer))
-            return 0;
-    }while(1);
-    
+    }while(!tmp->AchieveWin(CurrentPlayer));
+    tmp->DisplayBoard();
     return 0;
 
 }

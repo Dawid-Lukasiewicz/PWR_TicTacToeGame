@@ -8,8 +8,7 @@ class Game : public Board
 private:
     char Players[2] = {'O','X'};
     char Turn = 'O';
-    // char Player1 = 'O';
-    // char Player2 = 'X';
+    
 public:
     Game();
     ~Game();
