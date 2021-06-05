@@ -6,8 +6,12 @@ Game::Game(std::shared_ptr<Board>board):
     BoardGame(board)
 {}
 
-Game::Game(std::shared_ptr<Board>board, std::shared_ptr<MiniMaxAi> ai):
-    BoardGame(board), Ai(ai)
+Game::Game(std::shared_ptr<Board>board, std::shared_ptr<Ai> ai):
+    BoardGame(board), AiGame(ai)
+{}
+
+Game::Game(std::shared_ptr<Board>board, std::shared_ptr<Ai> ai1, std::shared_ptr<Ai> ai2):
+    BoardGame(board), AiGame(ai1), AiGame2(ai2)
 {}
 
 Game::~Game()
@@ -28,6 +32,25 @@ void Game::DisplayBoard()
     BoardGame->DisplayBoard();
 }
 
+void Game::DisplayBoardClear()
+{
+    BoardGame->DisplayBoardClear();
+}
+
+char Game::MakeRandomMove()
+{
+    if(AiGame->GetPlayer() == Turn)
+    {
+        AiGame->MakeMove_random(BoardGame);
+        return AiGame2->GetPlayer();
+    }
+    else
+    {
+        AiGame2->MakeMove_random(BoardGame);
+        return AiGame->GetPlayer();
+    }
+}
+
 char Game::NextPlayer(char CurrentPlayer)
 {
     if(CurrentPlayer == Players[1])
@@ -38,10 +61,21 @@ char Game::NextPlayer(char CurrentPlayer)
 
 char Game::NextTurn(char CurrentPlayer)
 {
-    if(Ai->GetPlayer()==CurrentPlayer)
+    int X_Value, Y_Value;
+    do
     {
         cout<<"Player: "<<CurrentPlayer<<endl;
-        Ai->MakeMove_random(BoardGame);
+        cin>>X_Value>>Y_Value;
+    } while (!BoardGame->CorrectMovePlayer(CurrentPlayer, X_Value, Y_Value));
+    return NextPlayer(CurrentPlayer);
+}
+
+char Game::NextTurnAi(char CurrentPlayer)
+{
+    if(AiGame->GetPlayer()==CurrentPlayer)
+    {
+        cout<<"Player: "<<CurrentPlayer<<endl;
+        AiGame->MakeBestMove(BoardGame);
     }
     else
     {
@@ -50,12 +84,21 @@ char Game::NextTurn(char CurrentPlayer)
         {
             cout<<"Player: "<<CurrentPlayer<<endl;
             cin>>X_Value>>Y_Value;
-        } while (!BoardGame->CorrectMove(CurrentPlayer, X_Value, Y_Value));
+        } while (!BoardGame->CorrectMovePlayer(CurrentPlayer, X_Value, Y_Value));
     }
     return NextPlayer(CurrentPlayer);
 }
 
-char Game::MakeMove(char CurrentPlayer)
+char Game::NextTurnAivsAi(char CurrentPlayer)
 {
+    if(AiGame->GetPlayer()==CurrentPlayer)
+    {
+        // cout<<"Player: "<<CurrentPlayer<<endl;
+        AiGame->MakeBestMove(BoardGame);
+    }
+    else
+    {
+        AiGame2->MakeBestMove(BoardGame);   
+    }
     return NextPlayer(CurrentPlayer);
 }

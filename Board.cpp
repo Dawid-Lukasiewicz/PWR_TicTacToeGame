@@ -4,20 +4,12 @@ using namespace std;
 
 Board::Board()
 {
-    BoardMatrix = new int*[Size];
     BoardGame = new char*[Size];
     for (int i = 0; i < Size; i++)
     {
-        BoardMatrix[i] = new int[Size];
         BoardGame[i] = new char[Size];
-    }
-
-    int k = 1;
-    for (int i = 0; i < Size; i++)
-    {
         for (int j = 0; j < Size; j++)
         {
-            BoardMatrix[i][j] = k++;
             BoardGame[i][j] = ' ';
         }
     }
@@ -27,29 +19,35 @@ Board::~Board()
 {
     for (int i = 0; i < Size; i++)
     {
-        delete[] BoardMatrix[i];
+        delete[] BoardGame[i];
     }
-    delete[] BoardMatrix;
+    delete[] BoardGame;
 }
 
-Board::Board(int NewSize):
-    Size(NewSize)
+Board::Board(int NewSize, int NewToWin):
+    Size(NewSize), ToWin(NewToWin)
 {
-    BoardMatrix = new int*[Size];
     BoardGame = new char*[Size];
     for (int i = 0; i < Size; i++)
     {
-        BoardMatrix[i] = new int[Size];
         BoardGame[i] = new char[Size];
-    }
-
-    int k = 1;
-    for (int i = 0; i < Size; i++)
-    {
         for (int j = 0; j < Size; j++)
         {
-            BoardMatrix[i][j] = k++;
             BoardGame[i][j] = ' ';
+        }
+    }
+}
+
+Board::Board(char **ABoard, int size)
+{
+    Size = size;
+    BoardGame = new char*[Size];
+    for (int i = 0; i < Size; i++)
+    {
+        BoardGame[i] = new char[Size];
+        for (int j = 0; j < Size; j++)
+        {
+            BoardGame[i][j] = ABoard[i][j];
         }
     }
 }
@@ -80,7 +78,13 @@ void Board::DisplayBoard()
     }
 }
 
-bool Board::CorrectMove(char& CurrentPlayer, int X_Value, int Y_Value)
+void Board::DisplayBoardClear()
+{
+    system("cls");
+    DisplayBoard();
+}
+
+bool Board::CorrectMovePlayer(char& CurrentPlayer, int X_Value, int Y_Value)
 {
     if(BoardGame[X_Value][Y_Value] == ' ')
         {
@@ -94,71 +98,196 @@ bool Board::CorrectMove(char& CurrentPlayer, int X_Value, int Y_Value)
         }
 }
 
-bool Board::AchieveWin(char CurrentPlayer)
+bool Board::CorrectMove(char& CurrentPlayer, int X_Value, int Y_Value)
 {
-    // Tie
+    if(BoardGame[X_Value][Y_Value] == ' ')
+        {
+            BoardGame[X_Value][Y_Value] = CurrentPlayer;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+}
+
+bool Board::IsTie()
+{
     for (int i = 0; i < Size; i++)
     {
         for (int j = 0; j < Size; j++)
         {
             if(BoardGame[i][j]==' ')
-                goto NotFilled;
+                return false;
         }
     }
-    cout<<"Tie!"<<endl;
     return true;
-    NotFilled:
-    
-    //Horizonally
+}
+
+bool Board::HorizontalWin(char& CurrentPlayer)
+{
+    char TmpA;
+
     for (int i = 0; i < Size; i++)
     {
-        for (int j = 0; j < Size-2; j++)
+        for (int j = 0; j < Size-ToWin+1; j++)
         {
-            if(BoardGame[i][j]==BoardGame[i][j+1] && BoardGame[i][j]==BoardGame[i][j+2] && BoardGame[i][j]==CurrentPlayer)
+            if(BoardGame[i][j] == CurrentPlayer)
             {
-                cout<<"The "<<CurrentPlayer<<" Won"<<endl;
-                return true;
+                int Points = 0;
+                TmpA = BoardGame[i][j];
+                for (int k = j; k < ToWin; k++)
+                {
+                    
+                    if(TmpA == BoardGame[i][k])
+                        Points++;
+                    if(Points >= ToWin)
+                        return true;
+                }
             }
         }
     }
+    return false;
+}
 
+bool Board::VerticalWin(char& CurrentPlayer)
+{
+    char TmpA;
+    for (int i = 0; i < Size-ToWin+1; i++)
+    {
+        for (int j = 0; j < Size ; j++)
+        {
+            if(BoardGame[i][j] == CurrentPlayer)
+            {
+                int Points = 0;
+                TmpA = BoardGame[i][j];
+                for (int k = i; k < ToWin; k++)
+                {
+                    
+                    if(TmpA == BoardGame[k][j])
+                        Points++;
+                    if(Points >= ToWin)
+                        return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+bool Board::DiagonalWin(char& CurrentPlayer)
+{
+    char TmpA;
+    for (int i = 0; i < Size-ToWin+1; i++)
+    {
+        for (int j = 0; j < Size-ToWin+1; j++)
+        {
+            if(BoardGame[i][j] == CurrentPlayer)
+            {
+                int Points = 0;
+                TmpA = BoardGame[i][j];
+                for (int k = 0; k < ToWin; k++)
+                {      
+                    if(TmpA == BoardGame[k+i][k+j])
+                        Points++;
+                    if(Points >= ToWin)
+                        return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+bool Board::DiagonalInverseWin(char& CurrentPlayer)
+{
+    char TmpA;
+    for (int i = 0; i < Size-ToWin+1; i++)
+    {
+        for (int j = Size-1; j > 0 + ToWin-2; j--)
+        {
+            if(BoardGame[i][j] == CurrentPlayer)
+            {
+                int n = i;
+                int Points = 0;
+                TmpA = BoardGame[i][j];
+                for (int k = j; k > -1; k--)
+                {   
+                    if(TmpA == BoardGame[n++][k])
+                        Points++;
+                    else
+                        break;
+                    if(Points >= ToWin)
+                        return true;
+                }
+            }
+        }
+    }
+    // for (int i = 0; i < Size-2; i++)
+    // {
+    //     for (int j = Size-1; j > 1; j--)
+    //     {
+    //         if(BoardGame[i][j]==BoardGame[i+1][j-1] && BoardGame[i][j]==BoardGame[i+2][j-2] && BoardGame[i][j]==CurrentPlayer)
+    //         {
+    //             return true;
+    //         }
+    //     }
+    // }
+    // char TmpA;
+    // for (int i = 0; i <= Size-ToWin; i++)
+    // {
+    //     for (int j = Size-1; j > ToWin-1; j--)
+    //     {
+    //         if(BoardGame[i][j] == CurrentPlayer)
+    //         {
+    //             cout << BoardGame[i][j]<<" ";
+    //             int Points = 0;
+    //             TmpA = BoardGame[i][j];
+    //             for (int k = j; k > j - ToWin; k--)
+    //             {      
+    //                 if(TmpA == BoardGame[Size-1-k][k])
+    //                     Points++;
+    //                 cout <<"Points" << Points <<" "<<endl;
+    //                 if(Points >= ToWin)
+    //                     return true;
+    //             }
+    //         }
+    //     }
+    // }
+    return false;
+}
+
+bool Board::AchieveWin(char& CurrentPlayer)
+{
+    //Horizonally
+    if(HorizontalWin(CurrentPlayer))
+    {
+        cout<<"The "<<CurrentPlayer<<" Won"<<endl;
+        return true;
+    }
     //Vertically
-    for (int i = 0; i < Size-2; i++)
+    if(VerticalWin(CurrentPlayer))
     {
-        for (int j = 0; j < Size; j++)
-        {
-            if(BoardGame[i][j]==BoardGame[i+1][j] && BoardGame[i][j]==BoardGame[i+2][j] && BoardGame[i][j]==CurrentPlayer)
-            {
-                cout<<"The "<<CurrentPlayer<<" Won"<<endl;
-                return true;
-            }
-        }
+        cout<<"The "<<CurrentPlayer<<" Won"<<endl;
+        return true;
     }
-
-    //Diagonally Right
-    for (int i = 0; i < Size-2; i++)
+    //Diagonally
+    if(DiagonalWin(CurrentPlayer))
     {
-        for (int j = 0; j < Size-2; j++)
-        {
-            if(BoardGame[i][j]==BoardGame[i+1][j+1] && BoardGame[i][j]==BoardGame[i+2][j+2] && BoardGame[i][j]==CurrentPlayer)
-            {
-                cout<<"The "<<CurrentPlayer<<" Won"<<endl;
-                return true;
-            }
-        }
+        cout<<"The "<<CurrentPlayer<<" Won"<<endl;
+        return true;
     }
     //Diagonally Inverse
-    for (int i = 0; i < Size-2; i++)
+    if(DiagonalInverseWin(CurrentPlayer))
     {
-        for (int j = Size-1; j > 1; j--)
-        {
-            // cout<<"Checing player "<<CurrentPlayer<<endl<<BoardGame[i][j]<<" "<<BoardGame[i+1][j-1]<<" "<<BoardGame[i+2][j-2]<<endl;
-            if(BoardGame[i][j]==BoardGame[i+1][j-1] && BoardGame[i][j]==BoardGame[i+2][j-2] && BoardGame[i][j]==CurrentPlayer)
-            {
-                cout<<"The "<<CurrentPlayer<<" Won"<<endl;
-                return true;
-            }
-        }
+        cout<<"The "<<CurrentPlayer<<" Won"<<endl;
+        return true;
+    }
+    // Tie
+    if(IsTie())
+    {
+        cout<<"Tie!"<<endl;
+        return true;
     }
     return false;
 }
