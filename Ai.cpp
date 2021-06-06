@@ -110,18 +110,12 @@ int Ai::MinMax(std::shared_ptr<Board> BoardGame, int Depth, int IsWorth, bool Is
     char OpponentPlayer = 'O';
     if(OpponentPlayer == AiPlayer)
         OpponentPlayer = 'X';
-    // cout<<"IsWorth: "<<IsWorth<<endl;
     int MoveValue = evaluate(BoardGame, OpponentPlayer);
 
     if(MoveValue == 10 || MoveValue == -10) // If Ai wins next turn or Player wins next turn
         return MoveValue;
-    // cout<<"IsWorth "<<IsWorth<<" Depth "<<Depth<<endl;
     if(BoardGame->IsTie() || IsWorth <= Depth)
-    {
-        // cout<<"IsWorth "<<IsWorth<<" ";
-        // 
         return 0;
-    }
     int Best;
     // Maximaze
     if(IsMax)
@@ -136,7 +130,6 @@ int Ai::MinMax(std::shared_ptr<Board> BoardGame, int Depth, int IsWorth, bool Is
                     IsWorth = min(IsWorth, Depth);
                     Best = max(Best, MinMax(BoardGame,++Depth,IsWorth, !IsMax)); //Taking max value of inserted move
                     BoardGame->GetBoard()[i][j] = ' ';  //Undoing the move
-                    
                 }
             }
         }
@@ -176,7 +169,6 @@ void Ai::MakeBestMove(std::shared_ptr<Board> BoardGame)
             if(BoardGame->CorrectMove(AiPlayer,i,j))
             {
                 int CurrentMoveValue = MinMax(BoardGame, 0, IsWorth, false);
-                // cout<<", CurrentMoveValue "<<CurrentMoveValue<<endl;
                 BoardGame->GetBoard()[i][j] = ' ';
                 if(CurrentMoveValue > BestMoveValue)
                 {

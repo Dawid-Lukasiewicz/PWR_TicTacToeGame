@@ -223,37 +223,6 @@ bool Board::DiagonalInverseWin(char& CurrentPlayer)
             }
         }
     }
-    // for (int i = 0; i < Size-2; i++)
-    // {
-    //     for (int j = Size-1; j > 1; j--)
-    //     {
-    //         if(BoardGame[i][j]==BoardGame[i+1][j-1] && BoardGame[i][j]==BoardGame[i+2][j-2] && BoardGame[i][j]==CurrentPlayer)
-    //         {
-    //             return true;
-    //         }
-    //     }
-    // }
-    // char TmpA;
-    // for (int i = 0; i <= Size-ToWin; i++)
-    // {
-    //     for (int j = Size-1; j > ToWin-1; j--)
-    //     {
-    //         if(BoardGame[i][j] == CurrentPlayer)
-    //         {
-    //             cout << BoardGame[i][j]<<" ";
-    //             int Points = 0;
-    //             TmpA = BoardGame[i][j];
-    //             for (int k = j; k > j - ToWin; k--)
-    //             {      
-    //                 if(TmpA == BoardGame[Size-1-k][k])
-    //                     Points++;
-    //                 cout <<"Points" << Points <<" "<<endl;
-    //                 if(Points >= ToWin)
-    //                     return true;
-    //             }
-    //         }
-    //     }
-    // }
     return false;
 }
 

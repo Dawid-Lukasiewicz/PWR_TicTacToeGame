@@ -120,7 +120,7 @@ int main()
         case 'q':
             break;
         }
-    } while(Button == 'q');
+    } while(Button != 'q');
 
     return 0;
 }

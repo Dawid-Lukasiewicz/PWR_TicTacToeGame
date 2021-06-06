@@ -93,7 +93,6 @@ char Game::NextTurnAivsAi(char CurrentPlayer)
 {
     if(AiGame->GetPlayer()==CurrentPlayer)
     {
-        // cout<<"Player: "<<CurrentPlayer<<endl;
         AiGame->MakeBestMove(BoardGame);
     }
     else

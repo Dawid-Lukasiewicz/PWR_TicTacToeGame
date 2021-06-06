@@ -13,7 +13,7 @@ public:
     Board();
     ~Board();
     Board(int NewSize, int NewToWin);
-    Board(char **ABoard, int size);
+    Board(char **ABoard, int size); //Not working
 
     const int& GetSize();
     char** GetBoard();
