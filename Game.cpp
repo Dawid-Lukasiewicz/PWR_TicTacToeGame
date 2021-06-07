@@ -65,7 +65,12 @@ char Game::NextTurn(char CurrentPlayer)
     do
     {
         cout<<"Player: "<<CurrentPlayer<<endl;
-        cin>>X_Value>>Y_Value;
+        do
+        {
+            cin>>X_Value>>Y_Value;
+            if(X_Value > BoardGame->GetSize()-1 || Y_Value > BoardGame->GetSize()-1)
+                cout<<"Exceeded board index"<<endl;
+        }while(X_Value > BoardGame->GetSize()-1 || Y_Value > BoardGame->GetSize()-1);
     } while (!BoardGame->CorrectMovePlayer(CurrentPlayer, X_Value, Y_Value));
     return NextPlayer(CurrentPlayer);
 }
@@ -83,8 +88,13 @@ char Game::NextTurnAi(char CurrentPlayer)
         do
         {
             cout<<"Player: "<<CurrentPlayer<<endl;
-            cin>>X_Value>>Y_Value;
-        } while (!BoardGame->CorrectMovePlayer(CurrentPlayer, X_Value, Y_Value));
+            do
+            {
+                cin>>X_Value>>Y_Value;
+                if(X_Value > BoardGame->GetSize()-1 || Y_Value > BoardGame->GetSize()-1)
+                    cout<<"Exceeded board index"<<endl;
+            }while(X_Value > BoardGame->GetSize()-1 || Y_Value > BoardGame->GetSize()-1);
+        }while(!BoardGame->CorrectMovePlayer(CurrentPlayer, X_Value, Y_Value));
     }
     return NextPlayer(CurrentPlayer);
 }

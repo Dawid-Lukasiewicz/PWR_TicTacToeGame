@@ -33,7 +33,7 @@ void GamemodeAi(int Size, int ToWin)
     char CurrentPlayer;
 
     tmp->DisplayBoard();
-    tmp->SetTurn(tmp->NextTurn(tmp->GetTurn()));
+    tmp->SetTurn(tmp->NextTurnAi(tmp->GetTurn()));
     do
     {
         tmp->DisplayBoardClear();

@@ -65,8 +65,15 @@ char** Board::GetBoard()
 
 void Board::DisplayBoard()
 {
+    cout<<"    ";
     for (int i = 0; i < Size; i++)
     {
+        cout<<i<<"   ";
+    }
+    cout<<endl;
+    for (int i = 0; i < Size; i++)
+    {
+        cout<<i<<".  ";
         for (int j = 0; j < Size; j++)
         {
             if(j<Size-1)
